@@ -1,14 +1,12 @@
-import { Global } from "@emotion/react";
 import { FC } from "react";
 import Cars from "./pages/Cars/Cars";
-import { GLOBAL_STYLES } from "./styles/global.styles";
+import { Layout } from "./shared/components/ui/Layout";
 
 const App: FC = () => {
   return (
-    <div>
+    <Layout>
       <Cars />
-      <Global styles={GLOBAL_STYLES} />
-    </div>
+    </Layout>
   );
 };
 
