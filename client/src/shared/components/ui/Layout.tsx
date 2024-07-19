@@ -1,7 +1,9 @@
 import { FC } from "react";
+import { Header } from "./Header";
 
 export const Layout: FC<{children: React.ReactNode}> = ({children}) => {
-    return <div>
-        {children}
-    </div>
+    return <>
+    <Header />
+        {children} 
+    </>
 }

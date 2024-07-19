@@ -13,11 +13,31 @@ const CarSchema = z.object({
 });
 
 export const api = {
-    getCars: () => {
-        return new Promise((res) => {
-            setTimeout(res, 2000);
-        }).then(() => {
-            return CarSchema.array().parse(carsJSON);
-        });
+    getCars: (searchQuery?: string) => {
+        const endpoint = "http://localhost:4000/api";
+        const graphqlQuery = `
+            {
+                cars ${(searchQuery ?? "")} {
+                    id
+                    availability
+                    brand
+                    color
+                    description
+                    img_src
+                    model
+                    model_year
+                    price
+                }
+            }
+        `
+        return fetch(endpoint, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify({ query: graphqlQuery })
+        }).then (response => response.json())
+        .then (result => CarSchema.array().parse(result.data.cars))
+        .catch (error => console.error(error))
     }
 };

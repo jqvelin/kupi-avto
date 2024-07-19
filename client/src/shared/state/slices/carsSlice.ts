@@ -1,16 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Car } from "../../../graphql/generated";
+import { sortCars } from "../../../utils/sortCars";
 
 type CarId = number;
 
-type SortingMethod = 
-'inStockFirst' 
-| 'byNameAsc' 
-| 'byNameDesc' 
-| 'newerFirst' 
-| 'olderFirst'
-| 'priceAsc'
-| 'priseDesc';
+export type SortingMethod =
+    | "inStockFirst"
+    | "byNameAsc"
+    | "byNameDesc"
+    | "newerFirst"
+    | "olderFirst"
+    | "priceAsc"
+    | "priceDesc";
 
 type CarsState = {
     // Record<CarId, Car> - более быстрый способ получить объект Car по CarId при больших объёмах данных.
@@ -19,6 +20,7 @@ type CarsState = {
     ids: CarId[];
     sortBy: SortingMethod;
     fetchCarsStatus: "idle" | "pending" | "success" | "failed";
+    searchQuery: string;
 };
 
 // Данные будут подгружены в компоненте.
@@ -26,8 +28,9 @@ const initialCarsState: CarsState = {
     entities: {},
     favorites: {},
     ids: [],
-    sortBy: 'inStockFirst',
-    fetchCarsStatus: "idle"
+    sortBy: "inStockFirst",
+    fetchCarsStatus: "idle",
+    searchQuery: ""
 };
 
 /* 
@@ -43,7 +46,23 @@ export const carsSlice = createSlice({
     selectors: {
         selectIsFetchCarsPending: (state) =>
             state.fetchCarsStatus === "pending",
-        selectIsFetchCarsIdle: (state) => state.fetchCarsStatus === "idle"
+        selectIsFetchCarsIdle: (state) => state.fetchCarsStatus === "idle",
+        selectAllCars: createSelector(
+            (state: CarsState) => state.ids,
+            (state: CarsState) => state.entities,
+            (state: CarsState) => state.sortBy,
+            (state: CarsState) => state.searchQuery,
+            (ids, entities, sortBy, searchQuery) => {
+                const unsortedCars = ids.map((id) => entities[id]);
+                const sortedCars = sortCars(unsortedCars, sortBy).filter(
+                    (car) => {
+                        const carName = car.brand + car.model;
+                        return carName.includes(searchQuery);
+                    }
+                );
+                return sortedCars;
+            }
+        )
     },
     reducers: {
         fetchCarsPending: (state) => {
@@ -60,7 +79,16 @@ export const carsSlice = createSlice({
             state.ids = cars.map((car) => car.id);
         },
         fetchCarsFailed: (state) => {
-            state.fetchCarsStatus = "failed"
+            state.fetchCarsStatus = "failed";
+        },
+        toggleSortBy: (state, action: PayloadAction<SortingMethod>) => {
+            state.sortBy = action.payload;
+        },
+        setSearchQuery: (state, action: PayloadAction<string>) => {
+            state.searchQuery = action.payload;
+        },
+        addFavoriteCar: (state, action: PayloadAction<CarId>) => {
+            state.favorites[action.payload] = state.entities[action.payload];
         }
     }
 });
