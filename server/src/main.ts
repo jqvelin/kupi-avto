@@ -10,7 +10,7 @@ async function bootstrap() {
     prefix: '/static/',
   });
 
-  await app.listen(process.env.PORT);
+  await app.listen(process.env.port);
 }
 
 bootstrap();
