@@ -12,6 +12,10 @@ const CarList = () => {
     const dispatch = useAppDispatch();
     const appStore = useAppStore();
 
+    const isPending = useAppSelector(
+        carsSlice.selectors.selectIsFetchCarsPending
+    );
+
     useEffect(() => {
         const isIdle = carsSlice.selectors.selectIsFetchCarsIdle(
             appStore.getState()
@@ -29,6 +33,7 @@ const CarList = () => {
 
     const cars = useAppSelector(carsSlice.selectors.selectAllCars);
 
+    if (isPending) return <h2 className="animate-pulse">Загрузка...</h2>;
     if (!cars.length) return <h2>По вашему запросу ничего не найдено :(</h2>;
 
     return (
