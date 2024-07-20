@@ -1,8 +1,7 @@
 import { FC } from "react";
 import Cars from "./pages/Cars/Cars";
 import { Layout } from "./shared/components/ui/Layout";
-import { Header } from "./shared/components/ui/Header";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { Favorites } from "./pages/Favorites/Favorites";
 
 const App: FC = () => {

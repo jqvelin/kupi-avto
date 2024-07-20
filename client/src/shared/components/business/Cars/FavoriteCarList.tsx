@@ -3,6 +3,7 @@ import { useAppSelector } from "../../../state/store"
 import { carsSlice } from "../../../state/slices/carsSlice"
 import { formatNumber } from "../../../../utils/formatNumber"
 import { FavoriteCarElement } from "./FavoriteCarElement"
+import { Fragment } from "react"
 
 export const FavoriteCarList = () => {
     const favoriteCars = useAppSelector(carsSlice.selectors.selectFavoriteCars)
@@ -18,12 +19,12 @@ export const FavoriteCarList = () => {
         <hr className="text-gray-2 mb-[70px]"/>
         <ul>
             {favoriteCars.map(car => {
-                return <>
+                return <Fragment key={car.id}>
                     <li>
-                        <FavoriteCarElement key={car.id} {...car} />
+                        <FavoriteCarElement {...car} />
                     </li>
                     {car !== favoriteCars[favoriteCars.length - 1] && <hr className="text-gray-2 my-[36px]"/>}
-                </>
+                </Fragment>
             })}
         </ul>
     </div>

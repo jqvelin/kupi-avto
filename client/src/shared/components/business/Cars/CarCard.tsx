@@ -17,15 +17,15 @@ export const CarCard: FC<Car> = ({
     color,
     price
 }) => {
-    const favoriteCarIds = useAppSelector(state => state.cars.favoriteCarIds)
-    const isCarInFavorites = favoriteCarIds.includes(id)
-    const dispatch = useAppDispatch()
-    
+    const favoriteCarIds = useAppSelector((state) => state.cars.favoriteCarIds);
+    const isCarInFavorites = favoriteCarIds.includes(id);
+    const dispatch = useAppDispatch();
+
     function toggleFavoriteCar() {
         if (isCarInFavorites) {
-            dispatch(carsSlice.actions.removeFavoriteCar(id))
+            dispatch(carsSlice.actions.removeFavoriteCar(id));
         } else {
-            dispatch(carsSlice.actions.addFavoriteCar(id))
+            dispatch(carsSlice.actions.addFavoriteCar(id));
         }
     }
 
@@ -37,9 +37,13 @@ export const CarCard: FC<Car> = ({
                     className={`${!availability && "opacity-30"}`}
                     alt={`${brand} ${model} ${model_year} ${color}`}
                 />
-                {!availability && <div className="absolute top-0 left-0 w-full h-full grid place-items-center">
-                        <h3 className="bg-black text-white text-[16px] md:text-[24px] rounded-[15px] px-[20px] py-[10px]">Нет в наличии</h3>
-                    </div>}
+                {!availability && (
+                    <div className="absolute top-0 left-0 w-full h-full grid place-items-center">
+                        <h3 className="bg-black text-white text-[16px] md:text-[24px] rounded-[15px] px-[20px] py-[10px]">
+                            Нет в наличии
+                        </h3>
+                    </div>
+                )}
             </div>
             <div className="w-full flex flex-col gap-1">
                 <h3
@@ -54,18 +58,27 @@ export const CarCard: FC<Car> = ({
                 </p>
                 <h4>от {formatPrice(price)}</h4>
                 <div className="flex items-center gap-[25px] mt-2">
-                    <button className={`py-[19px] px-[99px] ${!availability ? "bg-gray-2 text-black" : 'bg-blue-2 text-white'}`} disabled={!availability}>
+                    <button
+                        className={`py-[19px] px-[99px] ${
+                            !availability
+                                ? "bg-gray-2 text-black"
+                                : "bg-blue-2 text-white"
+                        }`}
+                        disabled={!availability}
+                    >
                         Купить
                     </button>
-                    <button onClick={toggleFavoriteCar} disabled={!availability}>
-                        {!availability 
-                            ? <HeartIconDisabled /> 
-                            : (
-                                isCarInFavorites
-                                ? <HeartIconFilled />
-                                : <HeartIconEmpty />
-                            )
-                        }
+                    <button
+                        onClick={toggleFavoriteCar}
+                        disabled={!availability}
+                    >
+                        {!availability ? (
+                            <HeartIconDisabled />
+                        ) : isCarInFavorites ? (
+                            <HeartIconFilled />
+                        ) : (
+                            <HeartIconEmpty />
+                        )}
                     </button>
                 </div>
             </div>

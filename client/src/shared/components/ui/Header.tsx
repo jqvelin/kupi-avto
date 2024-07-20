@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { HeartIconFilled } from "./icons/HeartIconFilled";
+import { BurgerMenuIcon } from "./icons/BurgerMenuIcon";
 
 export const Header = () => {
     return (
-        <header className="fixed z-[9999] flex items-center justify-between top-0 left-0 w-full h-[70px] bg-white border-b-[1px] border-gray-2 px-[10px] gap-4 md:px-[40px] overflow-y-auto">
-            <div className="flex items-center gap-[8px] md:gap-[16px]">
+        <header className="fixed z-[9999] row justify-between top-0 left-0 w-screen h-[70px] bg-white border-b-[1px] border-gray-2 px-[10px] md:px-[40px] gap-4 overflow-y-auto">
+            <div className="row gap-[8px] md:gap-[16px]">
                 <Link
                     to="/"
                     className="uppercase text-xl md:text-2xl"
@@ -13,10 +14,7 @@ export const Header = () => {
                     авто
                 </Link>
                 <button className="flex items-center text-[14px] md:[font-size:initial] gap-[7px] bg-blue-2 text-white px-[13px] py-[4px] md:px-[26px] md:py-[9px] flex-shrink-0">
-                    <img
-                        src="../../public/icons/burger-menu.svg"
-                        alt="Burger Menu Icon"
-                    />
+                    <BurgerMenuIcon />
                     Каталог
                 </button>
             </div>
