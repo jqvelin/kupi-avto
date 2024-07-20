@@ -16,7 +16,7 @@ export type SortingMethod =
 type CarsState = {
     // Record<CarId, Car> - более быстрый способ получить объект Car по CarId при больших объёмах данных.
     entities: Record<CarId, Car | undefined>;
-    favorites: Record<CarId, Car | undefined>;
+    favoriteCarIds: CarId[];
     ids: CarId[];
     sortBy: SortingMethod;
     fetchCarsStatus: "idle" | "pending" | "success" | "failed";
@@ -26,7 +26,7 @@ type CarsState = {
 // Данные будут подгружены в компоненте.
 const initialCarsState: CarsState = {
     entities: {},
-    favorites: {},
+    favoriteCarIds: [],
     ids: [],
     sortBy: "inStockFirst",
     fetchCarsStatus: "idle",
@@ -53,14 +53,21 @@ export const carsSlice = createSlice({
             (state: CarsState) => state.sortBy,
             (state: CarsState) => state.searchQuery,
             (ids, entities, sortBy, searchQuery) => {
-                const unsortedCars = ids.map((id) => entities[id]);
+                const unsortedCars = ids.map((id) => entities[id]).filter(car => car !== undefined)
                 const sortedCars = sortCars(unsortedCars, sortBy).filter(
                     (car) => {
                         const carName = car.brand + car.model;
-                        return carName.includes(searchQuery);
+                        return carName.includes(searchQuery)
                     }
                 );
                 return sortedCars;
+            }
+        ),
+        selectFavoriteCars: createSelector(
+            (state: CarsState) => state.entities,
+            (state: CarsState) => state.favoriteCarIds,
+            (entities, favoriteCarIds) => {
+                return favoriteCarIds.map((id) => entities[id]).filter(car => car !== undefined)
             }
         )
     },
@@ -88,7 +95,10 @@ export const carsSlice = createSlice({
             state.searchQuery = action.payload;
         },
         addFavoriteCar: (state, action: PayloadAction<CarId>) => {
-            state.favorites[action.payload] = state.entities[action.payload];
+            state.favoriteCarIds.push(action.payload)
+        },
+        removeFavoriteCar: (state, action: PayloadAction<CarId>) => {
+            state.favoriteCarIds = state.favoriteCarIds.filter(id => id !== action.payload);
         }
     }
 });
