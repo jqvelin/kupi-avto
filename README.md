@@ -1,5 +1,5 @@
 ## Запуск
-kupi-avto.vercel.app
+[Vercel App](kupi-avto.vercel.app)
 ## Локальный запуск
 1. Склонируйте репозиторий командой `git clone https://github.com/jqvelin/kupi-avto`
 2. Установите зависимости для клиента
