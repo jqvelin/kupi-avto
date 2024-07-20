@@ -1,9 +1,9 @@
-import { FC } from "react";
 import { Header } from "./Header";
+import { Outlet } from "react-router-dom";
 
-export const Layout: FC<{children: React.ReactNode}> = ({children}) => {
+export const Layout = () => {
     return <>
-    <Header />
-        {children} 
+        <Header />
+        <Outlet />
     </>
 }

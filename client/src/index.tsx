@@ -4,6 +4,7 @@ import App from "./App";
 import "./index.css";
 import { Provider } from "react-redux";
 import { store } from "./shared/state/store";
+import { BrowserRouter } from "react-router-dom";
 
 const rootNodeId = "root";
 
@@ -18,7 +19,9 @@ const root = createRoot(container);
 root.render(
     <React.StrictMode>
       <Provider store={store}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </Provider>
     </React.StrictMode>
 );

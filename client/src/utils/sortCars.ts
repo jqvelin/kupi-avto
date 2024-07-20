@@ -1,8 +1,7 @@
 import { Car } from "../graphql/generated"
 import { SortingMethod } from "../shared/state/slices/carsSlice"
 
-export const sortCars = (unsortedCars: (Car | undefined)[], sortBy: SortingMethod): Car[] => {
-    const cars = unsortedCars.filter((car) => car !== undefined)
+export const sortCars = (cars: Car[], sortBy: SortingMethod): Car[] => {
     switch (sortBy) {
         case 'byNameAsc': {
             return cars.sort((firstCar, secondCar) => {

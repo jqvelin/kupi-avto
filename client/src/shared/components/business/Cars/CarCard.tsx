@@ -3,8 +3,12 @@ import { Car } from "../../../../graphql/generated";
 import { HeartIconDisabled } from "../../ui/icons/HeartIconDisabled";
 import { formatPrice } from "../../../../utils/formatPrice";
 import { HeartIconEmpty } from "../../ui/icons/HeartIconEmpty";
+import { useAppDispatch, useAppSelector } from "../../../state/store";
+import { carsSlice } from "../../../state/slices/carsSlice";
+import { HeartIconFilled } from "../../ui/icons/HeartIconFilled";
 
 export const CarCard: FC<Car> = ({
+    id,
     img_src,
     brand,
     model,
@@ -13,6 +17,18 @@ export const CarCard: FC<Car> = ({
     color,
     price
 }) => {
+    const favoriteCarIds = useAppSelector(state => state.cars.favoriteCarIds)
+    const isCarInFavorites = favoriteCarIds.includes(id)
+    const dispatch = useAppDispatch()
+    
+    function toggleFavoriteCar() {
+        if (isCarInFavorites) {
+            dispatch(carsSlice.actions.removeFavoriteCar(id))
+        } else {
+            dispatch(carsSlice.actions.addFavoriteCar(id))
+        }
+    }
+
     return (
         <div className="flex flex-col">
             <div className="flex items-center justify-center relative border-[1px] border-gray-2 [border-top-left-radius:15px] [border-top-right-radius:15px] mb-[26px]">
@@ -41,8 +57,15 @@ export const CarCard: FC<Car> = ({
                     <button className={`py-[19px] px-[99px] ${!availability ? "bg-gray-2 text-black" : 'bg-blue-2 text-white'}`} disabled={!availability}>
                         Купить
                     </button>
-                    <button disabled={!availability}>
-                        {!availability ? <HeartIconDisabled /> : <HeartIconEmpty /> }
+                    <button onClick={toggleFavoriteCar} disabled={!availability}>
+                        {!availability 
+                            ? <HeartIconDisabled /> 
+                            : (
+                                isCarInFavorites
+                                ? <HeartIconFilled />
+                                : <HeartIconEmpty />
+                            )
+                        }
                     </button>
                 </div>
             </div>
