@@ -14,7 +14,7 @@ const CarSchema = z.object({
 
 export const api = {
     getCars: (searchQuery?: string) => {
-        const endpoint = "http://localhost:4000/api";
+        const endpoint = "https://server-black-one.vercel.app/api";
         const graphqlQuery = `
             {
                 cars ${(searchQuery ?? "")} {
