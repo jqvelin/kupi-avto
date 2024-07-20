@@ -4,9 +4,10 @@ import { carsSlice } from "../../../state/slices/carsSlice"
 import { formatNumber } from "../../../../utils/formatNumber"
 import { FavoriteCarElement } from "./FavoriteCarElement"
 import { Fragment } from "react"
+import { Car } from "../../../../graphql/generated"
 
 export const FavoriteCarList = () => {
-    const favoriteCars = useAppSelector(carsSlice.selectors.selectFavoriteCars)
+    const favoriteCars = useAppSelector(carsSlice.selectors.selectFavoriteCars) as Car[]
 
     if (!favoriteCars.length) return <div className="column text-center gap-4">
         <h2>Здесь пока пусто...</h2>

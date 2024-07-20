@@ -54,7 +54,7 @@ export const carsSlice = createSlice({
             (state: CarsState) => state.searchQuery,
             (ids, entities, sortBy, searchQuery) => {
                 const unsortedCars = ids.map((id) => entities[id]).filter(car => car !== undefined)
-                const sortedCars = sortCars(unsortedCars, sortBy).filter(
+                const sortedCars = sortCars(unsortedCars as Car[], sortBy).filter(
                     (car) => {
                         const carName = car.brand + car.model;
                         return carName.includes(searchQuery)
