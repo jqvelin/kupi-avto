@@ -7,25 +7,16 @@ import { useAppDispatch, useAppSelector } from "../../../state/store";
 import { carsSlice } from "../../../state/slices/carsSlice";
 import { HeartIconFilled } from "../../ui/icons/HeartIconFilled";
 
-export const CarCard: FC<Car> = ({
-    id,
-    img_src,
-    brand,
-    model,
-    availability,
-    model_year,
-    color,
-    price
-}) => {
-    const favoriteCarIds = useAppSelector((state) => state.cars.favoriteCarIds);
-    const isCarInFavorites = favoriteCarIds.includes(id);
+export const CarCard = ({ car }: { car: Car }) => {
+    const favoriteCars = useAppSelector((state) => state.cars.favoriteCars);
+    const isCarInFavorites = favoriteCars.includes(car);
     const dispatch = useAppDispatch();
 
     function toggleFavoriteCar() {
         if (isCarInFavorites) {
-            dispatch(carsSlice.actions.removeFavoriteCar(id));
+            dispatch(carsSlice.actions.removeFavoriteCar(car));
         } else {
-            dispatch(carsSlice.actions.addFavoriteCar(id));
+            dispatch(carsSlice.actions.addFavoriteCar(car));
         }
     }
 
@@ -33,11 +24,11 @@ export const CarCard: FC<Car> = ({
         <div className="flex flex-col">
             <div className="flex items-center justify-center relative border-[1px] border-gray-2 [border-top-left-radius:15px] [border-top-right-radius:15px] mb-[26px]">
                 <img
-                    src={img_src}
-                    className={`${!availability && "opacity-30"}`}
-                    alt={`${brand} ${model} ${model_year} ${color}`}
+                    src={car.img_src}
+                    className={`${!car.availability && "opacity-30"}`}
+                    alt={`${car.brand} ${car.model} ${car.model_year} ${car.color}`}
                 />
-                {!availability && (
+                {!car.availability && (
                     <div className="absolute top-0 left-0 w-full h-full grid place-items-center">
                         <h3 className="bg-black text-white text-[16px] md:text-[24px] rounded-[15px] px-[20px] py-[10px]">
                             Нет в наличии
@@ -48,31 +39,31 @@ export const CarCard: FC<Car> = ({
             <div className="w-full flex flex-col gap-1">
                 <h3
                     className="w-full text-ellipsis overflow-hidden whitespace-nowrap"
-                    title={brand + " " + model}
+                    title={car.brand + " " + car.model}
                 >
-                    {brand + " " + model}
+                    {car.brand + " " + car.model}
                 </h3>
                 <p className="flex gap-[14px]">
-                    <span className="text-gray-3">Год: {model_year}</span>
-                    <span className="text-gray-3">Цвет: {color}</span>
+                    <span className="text-gray-3">Год: {car.model_year}</span>
+                    <span className="text-gray-3">Цвет: {car.color}</span>
                 </p>
-                <h4>от {formatPrice(price)}</h4>
+                <h4>от {formatPrice(car.price)}</h4>
                 <div className="flex items-center gap-[25px] mt-2">
                     <button
                         className={`py-[19px] px-[99px] ${
-                            !availability
+                            !car.availability
                                 ? "bg-gray-2 text-black"
                                 : "bg-blue-2 text-white"
                         }`}
-                        disabled={!availability}
+                        disabled={!car.availability}
                     >
                         Купить
                     </button>
                     <button
                         onClick={toggleFavoriteCar}
-                        disabled={!availability}
+                        disabled={!car.availability}
                     >
-                        {!availability ? (
+                        {!car.availability ? (
                             <HeartIconDisabled />
                         ) : isCarInFavorites ? (
                             <HeartIconFilled />

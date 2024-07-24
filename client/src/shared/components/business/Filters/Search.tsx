@@ -3,11 +3,11 @@ import { useAppDispatch, useAppSelector } from "../../../state/store";
 import { MagnifyingGlass } from "../../ui/icons/MagnifyingGlass";
 
 export const Search = () => {
-    const searchQuery = useAppSelector(state => state.cars.searchQuery)
-    const dispatch = useAppDispatch()
+    const searchQuery = useAppSelector((state) => state.cars.searchQuery);
+    const dispatch = useAppDispatch();
     const setSearchQuery = (query: string) => {
-        dispatch(carsSlice.actions.setSearchQuery(query))
-    }
+        dispatch(carsSlice.actions.setSearchQuery(query));
+    };
     return (
         <div className="relative w-[clamp(100px,70vw,445px)] flex items-center">
             <input

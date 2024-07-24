@@ -1,6 +1,7 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { z } from "zod";
-import carsJSON from "../fake_cars.json";
-const CarSchema = z.object({
+import { Car } from "../graphql/generated";
+const CarResponseSchema = z.object({
     id: z.number(),
     availability: z.boolean(),
     brand: z.string(),
@@ -12,32 +13,26 @@ const CarSchema = z.object({
     price: z.string()
 });
 
-export const api = {
-    getCars: (searchQuery?: string) => {
-        const endpoint = "https://server-black-one.vercel.app/api";
-        const graphqlQuery = `
-            {
-                cars ${(searchQuery ?? "")} {
-                    id
-                    availability
-                    brand
-                    color
-                    description
-                    img_src
-                    model
-                    model_year
-                    price
-                }
-            }
-        `
-        return fetch(endpoint, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: 'POST',
-            body: JSON.stringify({ query: graphqlQuery })
-        }).then (response => response.json())
-        .then (result => CarSchema.array().parse(result.data.cars))
-        .catch (error => console.error(error))
-    }
-};
+// Замените на "http://localhost:4000/api" для проверки на локальном сервере
+const BASE_URL = "https://server-black-one.vercel.app/api";
+export const baseApi = createApi({
+    baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+    endpoints: () => ({})
+});
+
+export const carsApi = baseApi.injectEndpoints({
+    endpoints: (builder) => ({
+        getCars: builder.query<{ data: { cars: Car[] } }, void>({
+            query: () => ({
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                url: "/",
+                method: "POST",
+                body: JSON.stringify({
+                    query: `{cars {id availability brand color description img_src model model_year price}}`
+                })
+            })
+        })
+    })
+});

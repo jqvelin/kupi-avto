@@ -1,8 +1,5 @@
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Car } from "../../../graphql/generated";
-import { sortCars } from "../../../utils/sortCars";
-
-type CarId = number;
 
 export type SortingMethod =
     | "inStockFirst"
@@ -14,22 +11,15 @@ export type SortingMethod =
     | "priceDesc";
 
 type CarsState = {
-    // Record<CarId, Car> - более быстрый способ получить объект Car по CarId при больших объёмах данных.
-    entities: Record<CarId, Car | undefined>;
-    favoriteCarIds: CarId[];
-    ids: CarId[];
     sortBy: SortingMethod;
-    fetchCarsStatus: "idle" | "pending" | "success" | "failed";
     searchQuery: string;
+    favoriteCars: Car[];
 };
 
 // Данные будут подгружены в компоненте.
 const initialCarsState: CarsState = {
-    entities: {},
-    favoriteCarIds: [],
-    ids: [],
+    favoriteCars: [],
     sortBy: "inStockFirst",
-    fetchCarsStatus: "idle",
     searchQuery: ""
 };
 
@@ -43,62 +33,20 @@ const initialCarsState: CarsState = {
 export const carsSlice = createSlice({
     name: "cars",
     initialState: initialCarsState,
-    selectors: {
-        selectIsFetchCarsPending: (state) =>
-            state.fetchCarsStatus === "pending",
-        selectIsFetchCarsIdle: (state) => state.fetchCarsStatus === "idle",
-        selectAllCars: createSelector(
-            (state: CarsState) => state.ids,
-            (state: CarsState) => state.entities,
-            (state: CarsState) => state.sortBy,
-            (state: CarsState) => state.searchQuery,
-            (ids, entities, sortBy, searchQuery) => {
-                const unsortedCars = ids.map((id) => entities[id]).filter(car => car !== undefined)
-                const sortedCars = sortCars(unsortedCars as Car[], sortBy).filter(
-                    (car) => {
-                        const carName = car.brand + car.model;
-                        return carName.includes(searchQuery)
-                    }
-                );
-                return sortedCars;
-            }
-        ),
-        selectFavoriteCars: createSelector(
-            (state: CarsState) => state.entities,
-            (state: CarsState) => state.favoriteCarIds,
-            (entities, favoriteCarIds) => {
-                return favoriteCarIds.map((id) => entities[id]).filter(car => car !== undefined)
-            }
-        )
-    },
     reducers: {
-        fetchCarsPending: (state) => {
-            state.fetchCarsStatus = "pending";
-        },
-        fetchCarsSuccess: (state, action: { payload: Car[] }) => {
-            const cars = action.payload;
-
-            state.fetchCarsStatus = "success";
-            state.entities = cars.reduce((acc, car) => {
-                acc[car.id] = car;
-                return acc;
-            }, {} as Record<CarId, Car>);
-            state.ids = cars.map((car) => car.id);
-        },
-        fetchCarsFailed: (state) => {
-            state.fetchCarsStatus = "failed";
-        },
         toggleSortBy: (state, action: PayloadAction<SortingMethod>) => {
             state.sortBy = action.payload;
         },
         setSearchQuery: (state, action: PayloadAction<string>) => {
             state.searchQuery = action.payload;
         },
-        addFavoriteCar: (state, action: PayloadAction<CarId>) => {
-            state.favoriteCarIds.push(action.payload)
+        addFavoriteCar: (state, action: PayloadAction<Car>) => {
+            state.favoriteCars.push(action.payload);
         },
-        removeFavoriteCar: (state, action: PayloadAction<CarId>) => {
-            state.favoriteCarIds = state.favoriteCarIds.filter(id => id !== action.payload);
+        removeFavoriteCar: (state, action: PayloadAction<Car>) => {
+            state.favoriteCars = state.favoriteCars.filter(
+                (car) => car.id !== action.payload.id
+            );
         }
     }
 });
