@@ -22,4 +22,5 @@ cd ..
 cd client
 npm run start
 ```
-6. Откройте страницу http://localhost:3000
+6. В файле client/src/shared/api.ts замените BASE_URL на локальный хост
+7. Откройте страницу http://localhost:3000
