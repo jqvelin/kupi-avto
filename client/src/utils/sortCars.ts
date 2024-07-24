@@ -2,7 +2,7 @@ import { Car } from "../graphql/generated";
 import { SortingMethod } from "../shared/state/slices/carsSlice";
 
 export const sortCars = (
-    unsortedCars: (Car | undefined)[],
+    unsortedCars: Car[],
     sortBy: SortingMethod
 ): Car[] => {
     const cars = unsortedCars.filter((car) => car !== undefined);
