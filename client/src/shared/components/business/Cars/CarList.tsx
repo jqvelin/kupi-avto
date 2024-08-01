@@ -1,19 +1,23 @@
+import { useQuery } from "@tanstack/react-query";
 import { findCarByName } from "../../../../utils/findCarByName";
 import { sortCars } from "../../../../utils/sortCars";
-import { carsApi } from "../../../api";
+import { api, CarResponseSchema } from "../../../api";
 import { useAppSelector } from "../../../state/store";
 import { CarCard } from "./CarCard";
 
 const CarList = () => {
     const sortBy = useAppSelector((state) => state.cars.sortBy);
     const searchQuery = useAppSelector((state) => state.cars.searchQuery);
-    const { data: response, isFetching } = carsApi.useGetCarsQuery();
-    const unsortedCars = response?.data.cars;
+    const {data: unsortedCars} = useQuery({
+        queryKey: ["cars"],
+        queryFn: api.getCars,
+        select: response => CarResponseSchema.array().parse(response.data.data.cars)
+    })
+
     if (!unsortedCars?.length) return null;
 
     const cars = findCarByName(sortCars(unsortedCars, sortBy), searchQuery);
 
-    if (isFetching) return <h2 className="animate-pulse">Загрузка...</h2>;
     if (!cars?.length) return <h2>По вашему запросу ничего не найдено :(</h2>;
 
     return (

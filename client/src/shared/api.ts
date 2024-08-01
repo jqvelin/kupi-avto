@@ -1,7 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { z } from "zod";
 import { Car } from "../graphql/generated";
-const CarResponseSchema = z.object({
+import axios from "axios";
+
+export const CarResponseSchema = z.object({
     id: z.number(),
     availability: z.boolean(),
     brand: z.string(),
@@ -15,6 +17,15 @@ const CarResponseSchema = z.object({
 
 // Замените на "http://localhost:4000/api" для проверки на локальном сервере
 const BASE_URL = "https://server-black-one.vercel.app/api";
+export const api = {
+    getCars: () => {
+        return axios.post(BASE_URL, {
+            query: `{cars {id availability brand color description img_src model model_year price}}`
+        });
+    }
+};
+
+//RTK Query request
 export const baseApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
     endpoints: () => ({})
