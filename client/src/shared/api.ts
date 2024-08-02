@@ -18,7 +18,7 @@ export const CarResponseSchema = z.object({
 // Замените на "http://localhost:4000/api" для проверки на локальном сервере
 const BASE_URL = "https://server-black-one.vercel.app/api";
 export const api = {
-    getCars: () => {
+    getCars: async () => {
         return axios.post(BASE_URL, {
             query: `{cars {id availability brand color description img_src model model_year price}}`
         });
