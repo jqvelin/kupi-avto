@@ -6,9 +6,11 @@
 ```
 cd kupi-avto
 cd client
+
 npm i
+// В случае ошибок с версиями библиотек:
+npm i --legacy-peer-deps
 ```
-В случае ошибок с версиями библиотек: `npm i --legacy-peer-deps`
 3. Установите зависимости для сервера
 ```
 cd ..
