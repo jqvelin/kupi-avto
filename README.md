@@ -1,3 +1,4 @@
+Тестовое задание для компании Infomaximum
 ## Запуск
 [Vercel](https://kupi-avto.vercel.app)
 ## Локальный запуск
